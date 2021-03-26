@@ -25,19 +25,17 @@ import java.io.File;
  * 	    at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:355)
  * 	    at java.lang.ClassLoader.loadClass(ClassLoader.java:351)
  * 	    ... 7 more
- *
  * 该节评论中有解决方法：
  * 1，问题产生的原因：廖大佬用的eclipse，我们用的IDEA，
  *   我们在IDEA中，maven配置<scope>provided</scope>，就告诉了IDEA程序会在运行的时候提供这个依赖，但是实际上却并没有提供这个依赖。
  * 2，解决方法： 去掉<scope>provided</scope>，改<scope>complie</scope>，然后re import就可以了。
  *
- * 廖老师亲自回复： 那是idea的问题，如果你把provided改成compile，生成的war包会很大，因为把tomcat打包进去了
+ * 廖老师亲自回复：那是idea的问题，如果你把provided改成compile，生成的war包会很大，因为把tomcat打包进去了
  * 终极解决方案：
  * 1. 打开idea的Run/Debug Configurations:
  * 2. 选择Application - Main
  * 3. 右侧Configuration：Use classpath of module
  *      钩上☑︎Include dependencies with "Provided" scope
- *
  *
  *
  * 许多初学者经常卡在如何在IDE中启动Tomcat并加载webapp，更不要说断点调试了。我们需要一种简单可靠，能直接在IDE中启动并调试webapp的方法。
@@ -47,6 +45,8 @@ import java.io.File;
  *     正常服务。
  * 启动Tomcat无非就是设置好classpath并执行Tomcat某个jar包的main()方法，我们完全可以把Tomcat的jar包全部引入进来，
  * 然后自己编写一个main()方法，先启动Tomcat，然后让它加载我们的webapp就行。
+ *
+ *
  *
  * 浏览器发出的HTTP请求总是由Web Server先接收，然后，根据Servlet配置的映射，不同的路径转发到不同的Servlet：
  *                     ┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
@@ -110,7 +110,7 @@ import java.io.File;
  * 注意到具体的实现类是由各服务器提供的，而我们编写的Web应用程序只关心接口方法，并不需要关心具体实现的子类。
  *
  *
- * Servlet多线程模型:
+ * Servlet多线程模型: from: Web开发--Servlet进阶
  * 一个Servlet类在服务器中只有一个实例，但对于每个HTTP请求，Web服务器会使用多线程执行请求。因此，一个Servlet的doGet()、doPost()等处理请求的方法是多线程并发执行的。如果Servlet中定义了字段，要注意多线程并发访问的问题：
  *      public class HelloServlet extends HttpServlet {
  *          private Map<String, String> map = new ConcurrentHashMap<>();
@@ -122,6 +122,32 @@ import java.io.File;
  *      }
  * 对于每个请求，Web服务器会创建唯一的HttpServletRequest和HttpServletResponse实例，
  * 因此，HttpServletRequest和HttpServletResponse实例只有在当前处理线程中有效，它们总是局部变量，不存在多线程共享的问题。
+ *
+ *
+ * 使用Session和Cookie: from: Web开发--Servlet进阶--使用Session和Cookie
+ *     在使用多台服务器构成集群时，使用Session会遇到一些额外的问题。通常，多台服务器集群使用反向代理作为网站入口：
+ *                                              ┌────────────┐
+ *                                         ┌───>│Web Server 1│
+ *                                         │    └────────────┘
+ *         ┌───────┐     ┌─────────────┐   │    ┌────────────┐
+ *         │Browser│────>│Reverse Proxy│───┼───>│Web Server 2│
+ *         └───────┘     └─────────────┘   │    └────────────┘
+ *                                         │    ┌────────────┐
+ *                                         └───>│Web Server 3│
+ *                                              └────────────┘
+ *     如果多台Web Server采用无状态集群，那么反向代理总是以轮询方式将请求依次转发给每台Web Server，这会造成一个用户在Web Server 1存储的Session信息，
+ *     在Web Server 2和3上并不存在，即从Web Server 1登录后，如果后续请求被转发到Web Server 2或3，那么用户看到的仍然是未登录状态。
+ *     要解决这个问题:
+ *     方案一是在所有Web Server之间进行Session复制，但这样会严重消耗网络带宽，并且，每个Web Server的内存均存储所有用户的Session，内存使用率很低。
+ *     方案二是采用粘滞会话（Sticky Session）机制，即反向代理在转发请求的时候，总是根据JSESSIONID的值判断，相同的JSESSIONID总是转发到固定的Web Server，但这需要反向代理的支持。
+ *     无论采用何种方案，使用Session机制，会使得Web Server的集群很难扩展，
+ *     因此，Session适用于中小型Web应用程序。对于大型Web应用程序来说，通常需要避免使用Session机制。
+ *
+ *
+ * JSP是Java Server Pages的缩写，它的文件必须放到/src/main/webapp下，文件名必须以.jsp结尾，
+ * 整个文件与HTML并无太大区别，但需要插入变量，或者动态输出的地方，使用特殊指令<% ... %>。
+ * 
+ * MVC模式是一种分离业务逻辑和显示逻辑的设计模式，广泛应用在Web和桌面应用程序。
  */
 public class Main {
     public static void main(String[] args) throws Exception {
