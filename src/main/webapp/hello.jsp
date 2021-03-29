@@ -11,6 +11,9 @@
     <title>Title</title>
 </head>
 <body>
-<h1>Hello World, This is from jsp!</h1>
+<h1>Hello World, This is from hello.jsp!</h1>
+<%
+    out.println("Hello JSP!");
+%>
 </body>
 </html>

@@ -1,5 +1,6 @@
 package com.company.mavenembeded;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,11 +17,15 @@ public class HelloServlet extends HttpServlet {
     private int count = 0;
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("In the doGet for hello");
+        System.out.println("In the doGet for /hello");
         this.count = this.count + 1;
         resp.setContentType("text/html");
         System.out.println("req.getRequestURI() = " + req.getRequestURI());
-        System.out.println("req.getContextPath() = " + req.getContextPath());
+        // 读取当前请求路径:
+        ServletContext ctx = req.getServletContext();
+        // RequestURI包含ContextPath,需要去掉:
+        // System.out.println("ctx.getContextPath() = " + ctx.getContextPath());
+        String urlPath = req.getRequestURI().substring(ctx.getContextPath().length());
         String name = req.getParameter("name");
         if (name == null) {
             name = "world " + this.count;
@@ -30,3 +35,4 @@ public class HelloServlet extends HttpServlet {
         pw.flush();
     }
 }
+
