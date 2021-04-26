@@ -227,7 +227,11 @@ import java.io.File;
  * 如果我们传入的是“伪造”的HttpServletResponse，让下游组件写入到我们预设的ByteArrayOutputStream，我们就“截获”了下游组件写入的内容，
  * 于是，就可以把内容缓存起来，再通过原始的HttpServletResponse实例写入到网络。
  *
- * 使用Listener
+ * 使用Listener:
+ * ServletContext: 一个Web服务器可以运行一个或多个WebApp，对于每个WebApp，Web服务器都会为其创建一个全局唯一的 ServletContext 实例，
+ * ServletRequest、HttpSession等很多对象也提供 getServletContext() 方法获取到同一个ServletContext实例。
+ * ServletContext实例最大的作用就是设置和共享全局信息。
+ *
  * 过Listener我们可以监听Web应用程序的生命周期，获取HttpSession等创建和销毁的事件；
  * ServletContext是一个WebApp运行期的全局唯一实例，可用于设置和共享配置信息。
  */
