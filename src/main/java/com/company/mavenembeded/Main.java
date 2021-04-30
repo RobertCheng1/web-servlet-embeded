@@ -159,9 +159,10 @@ import java.io.File;
  * 整个文件与HTML并无太大区别，但需要插入变量，或者动态输出的地方，使用特殊指令<% ... %>。
  * JSP和Servlet有什么区别？
  * 其实它们没有任何区别，因为JSP在执行前首先被编译成一个Servlet。
- * 在Tomcat的临时目录下，可以找到一个hello_jsp.java的源文件，这个文件就是Tomcat把JSP自动转换成的Servlet源码，
- * 在该文件里面有 getSession() 调用，根据上文提到的 "在 Servlet 中第一次调用req.getSession()时，Servlet容器自动创建一个Session ID"
- * 可推导出当访问过 http://127.0.0.1:8090/hello.jsp 后，Cookie里就有 JSESSIONID 了
+ * 在Tomcat的临时目录下，可以找到一个hello_jsp.java的源文件，这个文件就是Tomcat把JSP自动转换成的Servlet源码（在该文件里面有 getSession()
+ * 调用，根据上文提到的 "在 Servlet 中第一次调用req.getSession()时，Servlet容器自动创建一个Session ID"可推导出当访问过
+ * http://127.0.0.1:8090/hello.jsp 后，Cookie里就有 JSESSIONID 了），可见JSP本质上就是一个Servlet，只不过无需配置映射路径，Web Server会
+ * 根据路径查找对应的.jsp文件，如果找到了，就自动编译成Servlet再执行。在服务器运行过程中，如果修改了JSP的内容，那么服务器会自动重新编译。
  *
  * 
  * MVC开发：
