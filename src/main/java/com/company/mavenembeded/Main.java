@@ -37,7 +37,7 @@ import java.io.File;
  * 该节评论中有解决方法：
  * 1，问题产生的原因：廖大佬用的eclipse，我们用的IDEA，
  *   我们在IDEA中，maven配置<scope>provided</scope>，就告诉了IDEA程序会在运行的时候提供这个依赖，但是实际上却并没有提供这个依赖。
- * 2，解决方法： 去掉<scope>provided</scope>，改<scope>complie</scope>，然后re import就可以了。
+ * 2，解决方法： 去掉<scope>provided</scope>，改<scope>complie</scope>，然后reimport就可以了。
  * 廖老师亲自回复：那是idea的问题，如果你把provided改成compile，生成的war包会很大，因为把tomcat打包进去了
  * 终极解决方案：
  * 1. 打开idea的Run/Debug Configurations:
